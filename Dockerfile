@@ -11,5 +11,5 @@ RUN pip install -r requirements.txt
 
 COPY anothersite .
 
-CMD ['gunicorn','anothersite.wsgi:application', 'manage.py', '--bind' '0.0.0.0:8000']
+CMD ['gunicorn', 'anothersite.wsgi:application', '--bind' '0.0.0.0:8000']
 
