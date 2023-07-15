@@ -9,21 +9,16 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-from os import getenv
+import os
 from pathlib import Path
 import logging.config
-import django.middleware.cache
 from django.urls import reverse_lazy
-
-#from django.utils.translation import gettext_lazy as _
-import sentry_sdk
 
 import sentry_sdk
 
 sentry_sdk.init(
     dsn="https://98d6a5516ac4494093d41c1f7fa7f140@o4505475152871424.ingest.sentry.io/4505475166502912",
     traces_sample_rate=1.0,
-
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,36 +26,32 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DATABASE_DIR = BASE_DIR / 'database'
 DATABASE_DIR.mkdir(exist_ok=True)
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = getenv("DJANGO_SECRET_KEY",
-    'django-insecure-ydii3^1#8*$cjv@c!i2c*s48gg4cs)*b0%$8d7pm(n1@1av=p_',
-)
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY",
+                       'django-insecure-ydii3^1#8*$cjv@c!i2c*s48gg4cs)*b0%$8d7pm(n1@1av=p_')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = getenv("DJANGO_DEBUG", "0") == "1"
+DEBUG = os.getenv("DJANGO_DEBUG", "0") == "1"
 
 ALLOWED_HOSTS = [
     '0.0.0.0',
     '127.0.0.1',
-] + getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
+] + os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 
 INTERNAL_IPS = [
     '127.0.0.1',
     '0.0.0.0',
-
 ]
 
 if DEBUG:
     import socket
+
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS.append('10.0.2.2')
-    INTERNAL_IPS.extend(
-        [ip[: ip.rfind('.')] + '.1' for ip in ips]
-    )
+    INTERNAL_IPS.extend([ip[: ip.rfind('.')] + '.1' for ip in ips])
 
 # Application definition
 
@@ -85,7 +76,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-  #  'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -99,7 +90,7 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.admindocs.middleware.XViewMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-  #  'django.middleware.cache.FetchFromCacheMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'anothersite.urls'
@@ -204,7 +195,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = reverse_lazy("myauth:about-me")
 LOGIN_URL = reverse_lazy("myauth:login")
 
-LOGLEVEL = getenv("DJANGO_LOGLEVEL", "info").upper()
+LOGLEVEL = os.getenv("DJANGO_LOGLEVEL", "info").upper()
 
 logging.config.dictConfig({
     "version": 1,
@@ -220,8 +211,8 @@ logging.config.dictConfig({
             'formatter': 'console',
         },
     },
-    "loggers":{
-        "":{
+    "loggers": {
+        "": {
             "level": LOGLEVEL,
             "handlers": [
                 "console",
